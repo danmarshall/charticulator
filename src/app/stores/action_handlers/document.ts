@@ -12,8 +12,8 @@ import { ActionHandlerRegistry } from "./registry";
 import { getConfig } from "../../config";
 
 /** Handlers for document-level actions such as Load, Save, Import, Export, Undo/Redo, Reset */
-export default function (REG: ActionHandlerRegistry<AppStore, Actions.Action>) {
-  REG.add(Actions.Export, function (action) {
+export default function(REG: ActionHandlerRegistry<AppStore, Actions.Action>) {
+  REG.add(Actions.Export, function(action) {
     (async () => {
       // Export as vector graphics
       if (action.type == "svg") {
@@ -89,7 +89,7 @@ export default function (REG: ActionHandlerRegistry<AppStore, Actions.Action>) {
     })();
   });
 
-  REG.add(Actions.ExportTemplate, function (this, action) {
+  REG.add(Actions.ExportTemplate, function(this, action) {
     action.target.generate(action.properties).then(base64 => {
       const byteCharacters = atob(base64);
       const byteNumbers = new Array(byteCharacters.length);
@@ -110,7 +110,7 @@ export default function (REG: ActionHandlerRegistry<AppStore, Actions.Action>) {
     });
   });
 
-  REG.add(Actions.Save, function (action) {
+  REG.add(Actions.Save, function(action) {
     this.backendSaveChart()
       .then(() => {
         if (action.onFinish) {
@@ -124,7 +124,7 @@ export default function (REG: ActionHandlerRegistry<AppStore, Actions.Action>) {
       });
   });
 
-  REG.add(Actions.SaveAs, function (action) {
+  REG.add(Actions.SaveAs, function(action) {
     this.backendSaveChartAs(action.saveAs)
       .then(() => {
         if (action.onFinish) {
@@ -138,7 +138,7 @@ export default function (REG: ActionHandlerRegistry<AppStore, Actions.Action>) {
       });
   });
 
-  REG.add(Actions.Open, function (action) {
+  REG.add(Actions.Open, function(action) {
     this.backendOpenChart(action.id)
       .then(() => {
         if (action.onFinish) {
@@ -152,7 +152,7 @@ export default function (REG: ActionHandlerRegistry<AppStore, Actions.Action>) {
       });
   });
 
-  REG.add(Actions.Load, function (action) {
+  REG.add(Actions.Load, function(action) {
     this.historyManager.clear();
     const state = new Migrator().migrate(
       action.projectData,
@@ -161,7 +161,7 @@ export default function (REG: ActionHandlerRegistry<AppStore, Actions.Action>) {
     this.loadState(state);
   });
 
-  REG.add(Actions.ImportDataset, function (action) {
+  REG.add(Actions.ImportDataset, function(action) {
     this.currentChartID = null;
     this.dataset = action.dataset;
     this.historyManager.clear();
@@ -170,7 +170,7 @@ export default function (REG: ActionHandlerRegistry<AppStore, Actions.Action>) {
     this.solveConstraintsAndUpdateGraphics();
   });
 
-  REG.add(Actions.ImportChartAndDataset, function (action) {
+  REG.add(Actions.ImportChartAndDataset, function(action) {
     this.historyManager.clear();
 
     this.currentChartID = null;
@@ -188,7 +188,7 @@ export default function (REG: ActionHandlerRegistry<AppStore, Actions.Action>) {
     this.emit(AppStore.EVENT_SELECTION);
   });
 
-  REG.add(Actions.ReplaceDataset, function (action) {
+  REG.add(Actions.ReplaceDataset, function(action) {
     this.saveHistory();
 
     this.currentChartID = null;
@@ -206,7 +206,7 @@ export default function (REG: ActionHandlerRegistry<AppStore, Actions.Action>) {
     this.emit(AppStore.EVENT_SELECTION);
   });
 
-  REG.add(Actions.Undo, function (action) {
+  REG.add(Actions.Undo, function(action) {
     const state = this.historyManager.undo(this.saveDecoupledState());
     if (state) {
       const ss = this.saveSelectionState();
@@ -215,7 +215,7 @@ export default function (REG: ActionHandlerRegistry<AppStore, Actions.Action>) {
     }
   });
 
-  REG.add(Actions.Redo, function (action) {
+  REG.add(Actions.Redo, function(action) {
     const state = this.historyManager.redo(this.saveDecoupledState());
     if (state) {
       const ss = this.saveSelectionState();
@@ -224,7 +224,7 @@ export default function (REG: ActionHandlerRegistry<AppStore, Actions.Action>) {
     }
   });
 
-  REG.add(Actions.Reset, function (action) {
+  REG.add(Actions.Reset, function(action) {
     this.saveHistory();
 
     this.currentSelection = null;
