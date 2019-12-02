@@ -115,6 +115,25 @@ export class ExportHTMLView extends ContextedComponent<{}, {}> {
   }
 }
 
+export class ExportVegaView extends ContextedComponent<{}, {}> {
+  public render() {
+    return (
+      <div className="el-horizontal-layout-item is-fix-width">
+        <CurrentChartView store={this.store} />
+        <div className="buttons">
+          <ButtonRaised
+            text="Vega"
+            url={R.getSVGIcon("toolbar/export")}
+            onClick={() => {
+              this.dispatch(new Actions.Export("vega"));
+            }}
+          />
+        </div>
+      </div>
+    );
+  }
+}
+
 export interface FileViewExportState {
   exportMode: string;
 }
@@ -129,12 +148,15 @@ export class FileViewExport extends ContextedComponent<
     exportMode: "image"
   };
 
-  public renderExportView(mode: "image" | "html") {
+  public renderExportView(mode: "image" | "html" | "vega") {
     if (mode == "image") {
       return <ExportImageView />;
     }
     if (mode == "html") {
       return <ExportHTMLView />;
+    }
+    if (mode == "vega") {
+      return <ExportVegaView />;
     }
   }
 
@@ -173,6 +195,16 @@ export class FileViewExport extends ContextedComponent<
                 <SVGImageIcon url={R.getSVGIcon("toolbar/export")} />
                 <span className="el-text">Export as HTML</span>
               </div>
+              <div
+                className={classNames("el-item", [
+                  "is-active",
+                  this.state.exportMode == "vega"
+                ])}
+                onClick={() => this.setState({ exportMode: "vega" })}
+              >
+                <SVGImageIcon url={R.getSVGIcon("toolbar/export")} />
+                <span className="el-text">Export as Vega</span>
+              </div>
               {this.store.listExportTemplateTargets().map(name => (
                 <div
                   key={name}
@@ -189,7 +221,7 @@ export class FileViewExport extends ContextedComponent<
             </div>
           </div>
           <ErrorBoundary maxWidth={300}>
-            {this.state.exportMode == "image" || this.state.exportMode == "html"
+            {this.state.exportMode == "image" || this.state.exportMode == "html" || this.state.exportMode == "vega"
               ? this.renderExportView(this.state.exportMode)
               : this.renderExportTemplate()}
           </ErrorBoundary>
