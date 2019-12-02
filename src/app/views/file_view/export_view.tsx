@@ -221,7 +221,9 @@ export class FileViewExport extends ContextedComponent<
             </div>
           </div>
           <ErrorBoundary maxWidth={300}>
-            {this.state.exportMode == "image" || this.state.exportMode == "html" || this.state.exportMode == "vega"
+            {this.state.exportMode == "image" ||
+            this.state.exportMode == "html" ||
+            this.state.exportMode == "vega"
               ? this.renderExportView(this.state.exportMode)
               : this.renderExportTemplate()}
           </ErrorBoundary>
